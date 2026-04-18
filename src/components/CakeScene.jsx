@@ -1,7 +1,11 @@
 import { useEffect } from 'react'
 import { Canvas, useThree } from '@react-three/fiber'
 import { OrbitControls, Stars, Sparkles } from '@react-three/drei'
+import { EffectComposer, Bloom } from '@react-three/postprocessing'
 import { CakeMesh } from './CakeMesh'
+
+const isMobile = typeof window !== 'undefined' &&
+  (window.matchMedia('(pointer: coarse)').matches || window.innerWidth < 768)
 
 function CameraAdapter({ portrait }) {
   const { camera } = useThree()
@@ -56,6 +60,17 @@ export function CakeScene({ onCandleBlow, portrait }) {
         target={[0, 1.8, 0]}
         touches={{ ONE: 0, TWO: 2 }}
       />
+
+      {!isMobile && (
+        <EffectComposer>
+          <Bloom
+            luminanceThreshold={0.82}
+            luminanceSmoothing={0.9}
+            intensity={0.45}
+            mipmapBlur
+          />
+        </EffectComposer>
+      )}
     </Canvas>
   )
 }

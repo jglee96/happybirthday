@@ -1,6 +1,31 @@
 import { useMemo, useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
+import { CanvasTexture, RepeatWrapping } from 'three'
 import { Candle } from './Candle'
+
+function makeFrostRoughnessTexture() {
+  const size = 128
+  const canvas = document.createElement('canvas')
+  canvas.width = canvas.height = size
+  const ctx = canvas.getContext('2d')
+  ctx.fillStyle = '#a0a0a0'
+  ctx.fillRect(0, 0, size, size)
+  for (let i = 0; i < 60; i++) {
+    const x = Math.random() * size
+    const y = Math.random() * size
+    const r = 4 + Math.random() * 22
+    const v = Math.floor(80 + Math.random() * 110)
+    const g = ctx.createRadialGradient(x, y, 0, x, y, r)
+    g.addColorStop(0, `rgba(${v},${v},${v},0.55)`)
+    g.addColorStop(1, 'rgba(0,0,0,0)')
+    ctx.fillStyle = g
+    ctx.fillRect(0, 0, size, size)
+  }
+  const tex = new CanvasTexture(canvas)
+  tex.wrapS = tex.wrapT = RepeatWrapping
+  tex.repeat.set(4, 2)
+  return tex
+}
 
 // ── seeded RNG (stable across renders) ──────────────────────────────────────
 function s(seed) {
@@ -247,6 +272,7 @@ function CakeStand() {
 // ── Main CakeMesh ─────────────────────────────────────────────────────────────
 export function CakeMesh({ onCandleBlow }) {
   const groupRef = useRef()
+  const frostTex = useMemo(() => makeFrostRoughnessTexture(), [])
 
   useFrame(({ clock }) => {
     if (groupRef.current) {
@@ -317,7 +343,7 @@ export function CakeMesh({ onCandleBlow }) {
       {/* frosting top */}
       <mesh position={[0, yBtop + FH / 2, 0]}>
         <cylinderGeometry args={[B.r + 0.2, B.r + 0.2, FH, 40]} />
-        <meshStandardMaterial color={FROST} roughness={0.55} metalness={0.0} />
+        <meshStandardMaterial color={FROST} roughness={0.55} metalness={0.0} roughnessMap={frostTex} />
       </mesh>
       {/* ganache drips */}
       <Drips radius={B.r + 0.16} yTop={yBtop} count={16} color={DRIP} />
@@ -354,7 +380,7 @@ export function CakeMesh({ onCandleBlow }) {
       <GoldBand radius={M.r} y={yM + M.h * 0.4} />
       <mesh position={[0, yMtop + FH / 2, 0]}>
         <cylinderGeometry args={[M.r + 0.16, M.r + 0.16, FH, 40]} />
-        <meshStandardMaterial color={FROST} roughness={0.55} metalness={0.0} />
+        <meshStandardMaterial color={FROST} roughness={0.55} metalness={0.0} roughnessMap={frostTex} />
       </mesh>
       <Drips radius={M.r + 0.12} yTop={yMtop} count={12} color={DRIP} />
       <RosetteRing radius={M.r + 0.14} y={yMtop + FH + 0.055} count={11} color={FROST} rScale={0.78} />
@@ -388,7 +414,7 @@ export function CakeMesh({ onCandleBlow }) {
       <GoldBand radius={T.r} y={yT + T.h * 0.42} />
       <mesh position={[0, yTtop + FH / 2, 0]}>
         <cylinderGeometry args={[T.r + 0.13, T.r + 0.13, FH, 40]} />
-        <meshStandardMaterial color={FROST} roughness={0.55} metalness={0.0} />
+        <meshStandardMaterial color={FROST} roughness={0.55} metalness={0.0} roughnessMap={frostTex} />
       </mesh>
       <Drips radius={T.r + 0.09} yTop={yTtop} count={8} color={DRIP} />
       <RosetteRing radius={T.r + 0.11} y={yTtop + FH + 0.05} count={8} color={FROST} rScale={0.72} />
