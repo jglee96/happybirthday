@@ -42,18 +42,18 @@ function Drips({ radius, yTop, count, color = '#2a0a14' }) {
 function Rosette({ position, color = '#FFF0F3', scale = 1 }) {
   const r  = 0.068 * scale
   const off = 0.088 * scale
-  const angles = [0, 60, 120, 180, 240, 300]
+  const angles = [0, 72, 144, 216, 288]
   return (
     <group position={position}>
       <mesh>
-        <sphereGeometry args={[r, 8, 8]} />
+        <sphereGeometry args={[r, 6, 6]} />
         <meshStandardMaterial color={color} roughness={0.1} metalness={0.03} />
       </mesh>
       {angles.map((deg, i) => {
         const a = (deg * Math.PI) / 180
         return (
           <mesh key={i} position={[Math.cos(a) * off, 0, Math.sin(a) * off]}>
-            <sphereGeometry args={[r * 0.82, 7, 7]} />
+            <sphereGeometry args={[r * 0.82, 5, 5]} />
             <meshStandardMaterial color={color} roughness={0.1} metalness={0.03} />
           </mesh>
         )
@@ -85,7 +85,7 @@ function RosetteRing({ radius, y, count, color, rScale = 1 }) {
 function GoldBand({ radius, y, height = 0.07 }) {
   return (
     <mesh position={[0, y, 0]}>
-      <cylinderGeometry args={[radius + 0.01, radius + 0.01, height, 64]} />
+      <cylinderGeometry args={[radius + 0.01, radius + 0.01, height, 32]} />
       <meshStandardMaterial color="#C8A84B" roughness={0.3} metalness={0.7} />
     </mesh>
   )
@@ -156,7 +156,7 @@ function PearlRow({ radius, y, count, colors = ['#e8c97a', '#f0829a', '#ffc2d1']
         const a = (i / count) * Math.PI * 2
         return (
           <mesh key={i} position={[Math.cos(a) * radius, y, Math.sin(a) * radius]}>
-            <sphereGeometry args={[0.085, 10, 10]} />
+            <sphereGeometry args={[0.085, 7, 7]} />
             <meshStandardMaterial
               color={colors[i % colors.length]}
               roughness={0.25}
@@ -224,24 +224,20 @@ function Leaf({ position, rotation }) {
 function CakeStand() {
   return (
     <group>
-      {/* plate */}
       <mesh position={[0, -0.07, 0]}>
-        <cylinderGeometry args={[3.65, 3.65, 0.14, 64]} />
+        <cylinderGeometry args={[3.65, 3.65, 0.14, 40]} />
         <meshStandardMaterial color="#FAF0E6" roughness={0.5} metalness={0.08} />
       </mesh>
-      {/* plate edge bevel */}
       <mesh position={[0, -0.07, 0]}>
-        <cylinderGeometry args={[3.72, 3.65, 0.08, 64]} />
+        <cylinderGeometry args={[3.72, 3.65, 0.08, 40]} />
         <meshStandardMaterial color="#E8D8C4" roughness={0.55} metalness={0.1} />
       </mesh>
-      {/* pillar */}
       <mesh position={[0, -0.62, 0]}>
-        <cylinderGeometry args={[0.38, 0.52, 1.0, 32]} />
+        <cylinderGeometry args={[0.38, 0.52, 1.0, 20]} />
         <meshStandardMaterial color="#FAF0E6" roughness={0.5} metalness={0.06} />
       </mesh>
-      {/* base disc */}
       <mesh position={[0, -1.15, 0]}>
-        <cylinderGeometry args={[2.1, 2.1, 0.1, 64]} />
+        <cylinderGeometry args={[2.1, 2.1, 0.1, 40]} />
         <meshStandardMaterial color="#FAF0E6" roughness={0.5} metalness={0.08} />
       </mesh>
     </group>
@@ -294,7 +290,7 @@ export function CakeMesh({ onCandleBlow }) {
   ]
 
   // ── strawberry positions (on plate) ─────────────────────────────────────────
-  const berryAngles = [0, 45, 90, 135, 180, 225, 270, 315]
+  const berryAngles = [0, 72, 144, 216, 288]
   const FROST = '#FFF0F5'
   const DRIP  = '#1a0510'
 
@@ -304,33 +300,30 @@ export function CakeMesh({ onCandleBlow }) {
 
       {/* ── bottom tier ──────────────────────────────────────────────────── */}
       <mesh position={[0, B.h / 2, 0]} castShadow receiveShadow>
-        <cylinderGeometry args={[B.r, B.r * 1.018, B.h, 72]} />
+        <cylinderGeometry args={[B.r, B.r * 1.018, B.h, 40]} />
         <meshStandardMaterial color="#782650" roughness={0.9} />
       </mesh>
       {/* naked-cake cream bands */}
       <mesh position={[0, B.h * 0.33, 0]}>
-        <cylinderGeometry args={[B.r + 0.012, B.r + 0.012, 0.07, 72]} />
+        <cylinderGeometry args={[B.r + 0.012, B.r + 0.012, 0.07, 40]} />
         <meshStandardMaterial color="#FFF0F5" roughness={0.65} />
       </mesh>
       <mesh position={[0, B.h * 0.67, 0]}>
-        <cylinderGeometry args={[B.r + 0.012, B.r + 0.012, 0.07, 72]} />
+        <cylinderGeometry args={[B.r + 0.012, B.r + 0.012, 0.07, 40]} />
         <meshStandardMaterial color="#FFF0F5" roughness={0.65} />
       </mesh>
       {/* gold band */}
       <GoldBand radius={B.r} y={B.h * 0.38} />
       {/* frosting top */}
       <mesh position={[0, yBtop + FH / 2, 0]}>
-        <cylinderGeometry args={[B.r + 0.2, B.r + 0.2, FH, 72]} />
+        <cylinderGeometry args={[B.r + 0.2, B.r + 0.2, FH, 40]} />
         <meshStandardMaterial color={FROST} roughness={0.55} metalness={0.0} />
       </mesh>
       {/* ganache drips */}
-      <Drips radius={B.r + 0.16} yTop={yBtop} count={28} color={DRIP} />
-      {/* rosette border at base (sitting on plate) */}
-      <RosetteRing radius={B.r * 0.92} y={0.07}    count={18} color={FROST} rScale={0.9} />
-      {/* rosette border at top (just above frosting edge) */}
-      <RosetteRing radius={B.r + 0.18} y={yBtop + FH + 0.06} count={22} color={FROST} rScale={0.82} />
-      {/* pearl row mid-tier */}
-      <PearlRow radius={B.r + 0.02} y={B.h * 0.62} count={20} />
+      <Drips radius={B.r + 0.16} yTop={yBtop} count={16} color={DRIP} />
+      <RosetteRing radius={B.r * 0.92} y={0.07}    count={12} color={FROST} rScale={0.9} />
+      <RosetteRing radius={B.r + 0.18} y={yBtop + FH + 0.06} count={14} color={FROST} rScale={0.82} />
+      <PearlRow radius={B.r + 0.02} y={B.h * 0.62} count={14} />
 
       {/* strawberries around plate */}
       {berryAngles.map((deg, i) => {
@@ -347,25 +340,25 @@ export function CakeMesh({ onCandleBlow }) {
 
       {/* ── middle tier ──────────────────────────────────────────────────── */}
       <mesh position={[0, yM + M.h / 2, 0]} castShadow receiveShadow>
-        <cylinderGeometry args={[M.r, M.r * 1.018, M.h, 72]} />
+        <cylinderGeometry args={[M.r, M.r * 1.018, M.h, 40]} />
         <meshStandardMaterial color="#8C3260" roughness={0.9} />
       </mesh>
       <mesh position={[0, yM + M.h * 0.33, 0]}>
-        <cylinderGeometry args={[M.r + 0.012, M.r + 0.012, 0.06, 72]} />
+        <cylinderGeometry args={[M.r + 0.012, M.r + 0.012, 0.06, 40]} />
         <meshStandardMaterial color="#FFF0F5" roughness={0.65} />
       </mesh>
       <mesh position={[0, yM + M.h * 0.67, 0]}>
-        <cylinderGeometry args={[M.r + 0.012, M.r + 0.012, 0.06, 72]} />
+        <cylinderGeometry args={[M.r + 0.012, M.r + 0.012, 0.06, 40]} />
         <meshStandardMaterial color="#FFF0F5" roughness={0.65} />
       </mesh>
       <GoldBand radius={M.r} y={yM + M.h * 0.4} />
       <mesh position={[0, yMtop + FH / 2, 0]}>
-        <cylinderGeometry args={[M.r + 0.16, M.r + 0.16, FH, 72]} />
+        <cylinderGeometry args={[M.r + 0.16, M.r + 0.16, FH, 40]} />
         <meshStandardMaterial color={FROST} roughness={0.55} metalness={0.0} />
       </mesh>
-      <Drips radius={M.r + 0.12} yTop={yMtop} count={20} color={DRIP} />
-      <RosetteRing radius={M.r + 0.14} y={yMtop + FH + 0.055} count={17} color={FROST} rScale={0.78} />
-      <PearlRow radius={M.r + 0.02} y={yM + M.h * 0.6} count={15} />
+      <Drips radius={M.r + 0.12} yTop={yMtop} count={12} color={DRIP} />
+      <RosetteRing radius={M.r + 0.14} y={yMtop + FH + 0.055} count={11} color={FROST} rScale={0.78} />
+      <PearlRow radius={M.r + 0.02} y={yM + M.h * 0.6} count={10} />
 
       {/* flowers on middle tier side */}
       {[0, 120, 240].map((deg, i) => {
@@ -381,24 +374,24 @@ export function CakeMesh({ onCandleBlow }) {
 
       {/* ── top tier ─────────────────────────────────────────────────────── */}
       <mesh position={[0, yT + T.h / 2, 0]} castShadow receiveShadow>
-        <cylinderGeometry args={[T.r, T.r * 1.018, T.h, 72]} />
+        <cylinderGeometry args={[T.r, T.r * 1.018, T.h, 40]} />
         <meshStandardMaterial color="#A03870" roughness={0.9} />
       </mesh>
       <mesh position={[0, yT + T.h * 0.33, 0]}>
-        <cylinderGeometry args={[T.r + 0.012, T.r + 0.012, 0.05, 72]} />
+        <cylinderGeometry args={[T.r + 0.012, T.r + 0.012, 0.05, 40]} />
         <meshStandardMaterial color="#FFF0F5" roughness={0.65} />
       </mesh>
       <mesh position={[0, yT + T.h * 0.67, 0]}>
-        <cylinderGeometry args={[T.r + 0.012, T.r + 0.012, 0.05, 72]} />
+        <cylinderGeometry args={[T.r + 0.012, T.r + 0.012, 0.05, 40]} />
         <meshStandardMaterial color="#FFF0F5" roughness={0.65} />
       </mesh>
       <GoldBand radius={T.r} y={yT + T.h * 0.42} />
       <mesh position={[0, yTtop + FH / 2, 0]}>
-        <cylinderGeometry args={[T.r + 0.13, T.r + 0.13, FH, 72]} />
+        <cylinderGeometry args={[T.r + 0.13, T.r + 0.13, FH, 40]} />
         <meshStandardMaterial color={FROST} roughness={0.55} metalness={0.0} />
       </mesh>
-      <Drips radius={T.r + 0.09} yTop={yTtop} count={14} color={DRIP} />
-      <RosetteRing radius={T.r + 0.11} y={yTtop + FH + 0.05} count={12} color={FROST} rScale={0.72} />
+      <Drips radius={T.r + 0.09} yTop={yTtop} count={8} color={DRIP} />
+      <RosetteRing radius={T.r + 0.11} y={yTtop + FH + 0.05} count={8} color={FROST} rScale={0.72} />
 
       {/* macarons on top tier */}
       {macarons.map((m, i) => (
