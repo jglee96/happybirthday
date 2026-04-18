@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { CakeScene } from './components/CakeScene'
+import { useBirthdaySong } from './hooks/useBirthdaySong'
 
 const TOTAL = 11
 const CONFETTI_COLORS = ['#e8c97a', '#f0829a', '#ffc2d1', '#fff8ee', '#c0deff', '#c9e8c0']
@@ -76,6 +77,8 @@ export default function App() {
   const [blown, setBlown] = useState(0)
   const allBlown = blown >= TOTAL
   const { canvasRef: confettiRef, launch: launchConfetti } = useConfetti()
+  const { start: startSong, toggleMute } = useBirthdaySong()
+  const [muted, setMuted] = useState(false)
 
   const [portrait, setPortrait] = useState(
     typeof window !== 'undefined' && window.innerWidth < window.innerHeight
@@ -91,12 +94,17 @@ export default function App() {
   }, [])
 
   const handleBlow = useCallback(() => {
+    startSong()
     setBlown(prev => {
       const next = Math.min(prev + 1, TOTAL)
       if (next >= TOTAL) launchConfetti()
       return next
     })
-  }, [launchConfetti])
+  }, [launchConfetti, startSong])
+
+  const handleToggleMute = useCallback(() => {
+    setMuted(toggleMute())
+  }, [toggleMute])
 
   return (
     <div className="app">
@@ -118,6 +126,11 @@ export default function App() {
         <span className="overlay-date">1998 · 04 · 18</span>
         <span className="overlay-sub">스물아홉 번째 생일을 축하해</span>
       </div>
+
+      {/* mute button */}
+      <button className="mute-btn" onClick={handleToggleMute} aria-label="음악 켜기/끄기">
+        {muted ? '🔇' : '🎵'}
+      </button>
 
       {/* candle dots */}
       <div className="candle-counter">
