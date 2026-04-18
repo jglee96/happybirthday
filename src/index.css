@@ -167,6 +167,29 @@ body {
   border-color: rgba(240,130,154,.28);
 }
 
+/* ── fanfare button ────────────────────────────────────────────────────── */
+.fanfare-btn {
+  pointer-events: all;
+  margin-top: 12px;
+  padding: 10px 24px;
+  min-height: 44px;
+  background: transparent;
+  border: 1px solid var(--gold);
+  border-radius: 24px;
+  color: var(--gold);
+  font-family: 'Gowun Batang', serif;
+  font-size: clamp(12px, 1.8vmin, 15px);
+  letter-spacing: .18em;
+  cursor: pointer;
+  transition: background .25s, color .25s;
+  -webkit-tap-highlight-color: transparent;
+}
+.fanfare-btn:hover,
+.fanfare-btn:active {
+  background: var(--gold);
+  color: #05050f;
+}
+
 /* ── confetti canvas ───────────────────────────────────────────────────── */
 .confetti-canvas {
   position: fixed;

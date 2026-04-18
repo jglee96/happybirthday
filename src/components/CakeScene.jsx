@@ -35,12 +35,12 @@ export function CakeScene({ onCandleBlow, portrait }) {
 
       {/* ── lighting: gentle, no glare ── */}
       {/* soft ambient — main fill */}
-      <ambientLight intensity={0.55} color="#ffe0e8" />
+      <ambientLight intensity={0.85} color="#ffe0e8" />
 
       {/* key light: warm, moderate, angled */}
       <directionalLight
         position={[4, 7, 5]}
-        intensity={0.85}
+        intensity={1.2}
         color="#fff6ee"
       />
 

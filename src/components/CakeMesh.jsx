@@ -263,7 +263,6 @@ export function CakeMesh({ onCandleBlow }) {
   const M  = { r: 1.95, h: 1.2  }   // middle tier
   const T  = { r: 1.28, h: 0.92 }   // top tier
   const FH = 0.12                     // frosting disc height
-  const CH = 0.76                     // candle height
 
   // ── Y stack ─────────────────────────────────────────────────────────────────
   const yBtop = B.h
@@ -273,9 +272,19 @@ export function CakeMesh({ onCandleBlow }) {
   const yTtop = yT + T.h
   const yC    = yTtop + FH   // candle bases
 
-  // ── candle XZ positions (cross + center) ────────────────────────────────────
-  const candleXZ = [[0,0],[0.62,0],[-0.62,0],[0,0.62],[0,-0.62]]
-  const CANDLE_COLS = ['#F4A0B8','#E8C97A','#C4AADA','#A8C8E8','#F4B896']
+  // ── candle positions ─────────────────────────────────────────────────────────
+  // 2 large (10년) at center, 9 small (1년) in ring → total 29
+  const largeCandlePos = [[-0.35, yC + 1.12 / 2, 0], [0.35, yC + 1.12 / 2, 0]]
+  const smallCandlePos = Array.from({ length: 9 }, (_, i) => {
+    const a = (i / 9) * Math.PI * 2
+    return [Math.cos(a) * 0.72, yC + 0.52 / 2, Math.sin(a) * 0.72]
+  })
+  const LARGE_COLS = [['#E8C97A','#FFF0D0'],['#F4A0B8','#FFD0E0']]
+  const SMALL_COLS = [
+    ['#F4A0B8','#FFD0E0'],['#C4AADA','#E8D8F8'],['#A8C8E8','#D0E8F8'],
+    ['#F4B896','#FFD8C0'],['#A8D8B8','#D0F0E0'],['#E8C97A','#FFF0D0'],
+    ['#F4A0B8','#FFD0E0'],['#C4AADA','#E8D8F8'],['#F4B896','#FFD8C0'],
+  ]
 
   // ── macaron positions (on top tier frosting) ────────────────────────────────
   const macarons = [
@@ -296,7 +305,16 @@ export function CakeMesh({ onCandleBlow }) {
       {/* ── bottom tier ──────────────────────────────────────────────────── */}
       <mesh position={[0, B.h / 2, 0]} castShadow receiveShadow>
         <cylinderGeometry args={[B.r, B.r * 1.018, B.h, 72]} />
-        <meshStandardMaterial color="#5C1E3A" roughness={0.9} />
+        <meshStandardMaterial color="#782650" roughness={0.9} />
+      </mesh>
+      {/* naked-cake cream bands */}
+      <mesh position={[0, B.h * 0.33, 0]}>
+        <cylinderGeometry args={[B.r + 0.012, B.r + 0.012, 0.07, 72]} />
+        <meshStandardMaterial color="#FFF0F5" roughness={0.65} />
+      </mesh>
+      <mesh position={[0, B.h * 0.67, 0]}>
+        <cylinderGeometry args={[B.r + 0.012, B.r + 0.012, 0.07, 72]} />
+        <meshStandardMaterial color="#FFF0F5" roughness={0.65} />
       </mesh>
       {/* gold band */}
       <GoldBand radius={B.r} y={B.h * 0.38} />
@@ -330,7 +348,15 @@ export function CakeMesh({ onCandleBlow }) {
       {/* ── middle tier ──────────────────────────────────────────────────── */}
       <mesh position={[0, yM + M.h / 2, 0]} castShadow receiveShadow>
         <cylinderGeometry args={[M.r, M.r * 1.018, M.h, 72]} />
-        <meshStandardMaterial color="#6E2848" roughness={0.9} />
+        <meshStandardMaterial color="#8C3260" roughness={0.9} />
+      </mesh>
+      <mesh position={[0, yM + M.h * 0.33, 0]}>
+        <cylinderGeometry args={[M.r + 0.012, M.r + 0.012, 0.06, 72]} />
+        <meshStandardMaterial color="#FFF0F5" roughness={0.65} />
+      </mesh>
+      <mesh position={[0, yM + M.h * 0.67, 0]}>
+        <cylinderGeometry args={[M.r + 0.012, M.r + 0.012, 0.06, 72]} />
+        <meshStandardMaterial color="#FFF0F5" roughness={0.65} />
       </mesh>
       <GoldBand radius={M.r} y={yM + M.h * 0.4} />
       <mesh position={[0, yMtop + FH / 2, 0]}>
@@ -356,7 +382,15 @@ export function CakeMesh({ onCandleBlow }) {
       {/* ── top tier ─────────────────────────────────────────────────────── */}
       <mesh position={[0, yT + T.h / 2, 0]} castShadow receiveShadow>
         <cylinderGeometry args={[T.r, T.r * 1.018, T.h, 72]} />
-        <meshStandardMaterial color="#8A3260" roughness={0.9} />
+        <meshStandardMaterial color="#A03870" roughness={0.9} />
+      </mesh>
+      <mesh position={[0, yT + T.h * 0.33, 0]}>
+        <cylinderGeometry args={[T.r + 0.012, T.r + 0.012, 0.05, 72]} />
+        <meshStandardMaterial color="#FFF0F5" roughness={0.65} />
+      </mesh>
+      <mesh position={[0, yT + T.h * 0.67, 0]}>
+        <cylinderGeometry args={[T.r + 0.012, T.r + 0.012, 0.05, 72]} />
+        <meshStandardMaterial color="#FFF0F5" roughness={0.65} />
       </mesh>
       <GoldBand radius={T.r} y={yT + T.h * 0.42} />
       <mesh position={[0, yTtop + FH / 2, 0]}>
@@ -390,13 +424,24 @@ export function CakeMesh({ onCandleBlow }) {
         )
       })}
 
-      {/* ── candles ───────────────────────────────────────────────────────── */}
-      {candleXZ.map(([x, z], i) => (
+      {/* ── candles: 2 large (10년) + 9 small (1년) = 29 ──────────────────── */}
+      {largeCandlePos.map((pos, i) => (
         <Candle
-          key={i}
-          position={[x, yC + CH / 2, z]}
-          candleHeight={CH}
-          color={CANDLE_COLS[i]}
+          key={`large-${i}`}
+          position={pos}
+          isLarge={true}
+          color1={LARGE_COLS[i][0]}
+          color2={LARGE_COLS[i][1]}
+          onBlow={onCandleBlow}
+        />
+      ))}
+      {smallCandlePos.map((pos, i) => (
+        <Candle
+          key={`small-${i}`}
+          position={pos}
+          isLarge={false}
+          color1={SMALL_COLS[i][0]}
+          color2={SMALL_COLS[i][1]}
           onBlow={onCandleBlow}
         />
       ))}
